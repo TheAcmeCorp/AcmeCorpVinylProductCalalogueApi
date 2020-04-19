@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AcmeCorpVinylProductCalalogueApi.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +27,8 @@ namespace AcmeCorpVinylProductCalalogueApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string connectionString = Environment.GetEnvironmentVariable("ConnectionString") ?? Configuration.GetConnectionString("DefaultConnection");
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -39,6 +43,11 @@ namespace AcmeCorpVinylProductCalalogueApi
                     };
                 });
 
+            services.AddDbContext<VinylProductCatalogueContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+            });
+
             services.AddControllers();
         }
 
@@ -50,16 +59,18 @@ namespace AcmeCorpVinylProductCalalogueApi
                 app.UseDeveloperExceptionPage();
             }
 
-
-            app.UseRouting();
-
-            app.UseAuthentication();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
+            app.Map("/VinylProduct", options =>
             {
-                endpoints.MapControllers();
+                options.UseRouting();
+
+                options.UseAuthentication();
+
+                options.UseAuthorization();
+
+                options.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                });
             });
         }
     }
