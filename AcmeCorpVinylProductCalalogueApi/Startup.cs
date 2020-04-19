@@ -17,6 +17,8 @@ namespace AcmeCorpVinylProductCalalogueApi
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,6 +32,17 @@ namespace AcmeCorpVinylProductCalalogueApi
             string connectionString = Environment.GetEnvironmentVariable("ConnectionString") ?? Configuration.GetConnectionString("DefaultConnection");
             string authority = Environment.GetEnvironmentVariable("IdpAuthority") ?? "http://host.docker.internal:8000/Identity";
             string claimsIssuer = Environment.GetEnvironmentVariable("IdpClaimsIssuer") ?? "http://localhost:8000/identity";
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.AllowAnyOrigin();
+                                      builder.AllowAnyMethod();
+                                      builder.AllowAnyHeader();
+                                  });
+            });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -64,6 +77,8 @@ namespace AcmeCorpVinylProductCalalogueApi
             app.Map("/VinylProduct", options =>
             {
                 options.UseRouting();
+
+                options.UseCors();
 
                 options.UseAuthentication();
 
