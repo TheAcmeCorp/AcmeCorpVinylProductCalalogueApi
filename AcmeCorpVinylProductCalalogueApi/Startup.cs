@@ -28,13 +28,15 @@ namespace AcmeCorpVinylProductCalalogueApi
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Environment.GetEnvironmentVariable("ConnectionString") ?? Configuration.GetConnectionString("DefaultConnection");
+            string authority = Environment.GetEnvironmentVariable("IdpAuthority") ?? "http://host.docker.internal:8000/Identity";
+            string claimsIssuer = Environment.GetEnvironmentVariable("IdpClaimsIssuer") ?? "http://localhost:8000/identity";
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = "http://host.docker.internal:8000/Identity";
+                    options.Authority = authority;
                     options.Audience = "VinylProductCatalogue";
-                    options.ClaimsIssuer = "http://localhost:8000/identity";
+                    options.ClaimsIssuer = claimsIssuer;
                     options.RequireHttpsMetadata = false;
                     options.IncludeErrorDetails = true;
                     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
