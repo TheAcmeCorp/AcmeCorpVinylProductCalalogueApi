@@ -76,9 +76,9 @@ namespace AcmeCorpVinylProductCalalogueApi
 
             app.Map("/VinylProduct", options =>
             {
-                options.UseRouting();
+                options.UseCors(MyAllowSpecificOrigins);
 
-                options.UseCors();
+                options.UseRouting();
 
                 options.UseAuthentication();
 
