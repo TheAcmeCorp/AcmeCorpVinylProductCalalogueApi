@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AcmeCorpVinylProductCalalogueApi.Context;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -58,7 +57,7 @@ namespace AcmeCorpVinylProductCalalogueApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.Map("/VinylMusicCatalogue", options =>
+            app.Map("/VinylProductCatalogue", options =>
             {
                 options.UseCors(MyAllowSpecificOrigins);
 
