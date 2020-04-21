@@ -13,7 +13,6 @@ namespace AcmeCorpVinylProductCalalogueApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class VinylAlbumsController : ControllerBase
     {
         private readonly VinylProductCatalogueContext _context;
