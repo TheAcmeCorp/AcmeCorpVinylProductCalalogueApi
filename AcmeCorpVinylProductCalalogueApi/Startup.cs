@@ -74,7 +74,7 @@ namespace AcmeCorpVinylProductCalalogueApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.Map("/VinylProduct", options =>
+            app.Map("/VinylMusicCatalogue", options =>
             {
                 options.UseCors(MyAllowSpecificOrigins);
 
