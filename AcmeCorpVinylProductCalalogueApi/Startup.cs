@@ -30,8 +30,6 @@ namespace AcmeCorpVinylProductCalalogueApi
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Environment.GetEnvironmentVariable("ConnectionString") ?? Configuration.GetConnectionString("DefaultConnection");
-            string authority = Environment.GetEnvironmentVariable("IdpAuthority") ?? "http://host.docker.internal:8000/Identity";
-            string claimsIssuer = Environment.GetEnvironmentVariable("IdpClaimsIssuer") ?? "http://localhost:8000/identity";
 
             services.AddCors(options =>
             {
@@ -43,20 +41,6 @@ namespace AcmeCorpVinylProductCalalogueApi
                                       builder.AllowAnyHeader();
                                   });
             });
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.Authority = authority;
-                    options.Audience = "VinylProductCatalogue";
-                    options.ClaimsIssuer = claimsIssuer;
-                    options.RequireHttpsMetadata = false;
-                    options.IncludeErrorDetails = true;
-                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
-                    {
-                        ValidateIssuer = false
-                    };
-                });
 
             services.AddDbContext<VinylProductCatalogueContext>(options =>
             {
@@ -79,8 +63,6 @@ namespace AcmeCorpVinylProductCalalogueApi
                 options.UseCors(MyAllowSpecificOrigins);
 
                 options.UseRouting();
-
-                options.UseAuthentication();
 
                 options.UseAuthorization();
 
